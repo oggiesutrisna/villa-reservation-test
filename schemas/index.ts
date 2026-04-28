@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { startOfDay } from "date-fns";
 
 export const VillaSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -11,7 +12,7 @@ export type VillaInput = z.infer<typeof VillaSchema>;
 
 export const ReservationSchema = z.object({
   villaId: z.string().min(1, "Villa ID is required"),
-  checkIn: z.coerce.date().refine((date) => date >= new Date(), {
+  checkIn: z.coerce.date().refine((date) => date >= startOfDay(new Date()), {
     message: "Check-in date cannot be in the past",
   }),
   checkOut: z.coerce.date(),

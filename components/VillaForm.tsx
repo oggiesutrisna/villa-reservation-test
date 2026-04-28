@@ -21,15 +21,18 @@ export default function VillaForm() {
     };
 
     try {
-      await createVilla(data);
-      (e.target as HTMLFormElement).reset();
-      router.refresh();
-      alert("Villa created successfully!");
-    } catch (error: any) {
-      alert(error.message);
+      const result = await createVilla(data);
+      if (result.success) {
+        (e.target as HTMLFormElement).reset();
+        router.refresh();
+        alert("Villa created successfully!");
+      } else {
+        alert(`Error: ${result.error}`);
+      }
     } finally {
       setLoading(false);
     }
+
   }
 
   return (

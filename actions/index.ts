@@ -5,26 +5,43 @@ import { VillaService } from "@/services/villa.service";
 import { ReservationService } from "@/services/reservation.service";
 import { VillaSchema, ReservationSchema, VillaInput, ReservationInput } from "@/schemas";
 
+function getErrorMessage(error: unknown) {
+  return error instanceof Error ? error.message : "Unknown error";
+}
+
 export async function createVilla(data: VillaInput) {
-  const validated = VillaSchema.parse(data);
-  const villa = await VillaService.create(validated);
-  revalidatePath("/");
-  revalidatePath("/villas");
-  return villa;
+  try {
+    const validated = VillaSchema.parse(data);
+    const villa = await VillaService.create(validated);
+    revalidatePath("/");
+    revalidatePath("/villas");
+    return { success: true, data: villa };
+  } catch (error: unknown) {
+    return { success: false, error: getErrorMessage(error) };
+  }
 }
 
 export async function updateVilla(id: string, data: VillaInput) {
-  const validated = VillaSchema.parse(data);
-  const villa = await VillaService.update(id, validated);
-  revalidatePath("/");
-  revalidatePath("/villas");
-  return villa;
+  try {
+    const validated = VillaSchema.parse(data);
+    const villa = await VillaService.update(id, validated);
+    revalidatePath("/");
+    revalidatePath("/villas");
+    return { success: true, data: villa };
+  } catch (error: unknown) {
+    return { success: false, error: getErrorMessage(error) };
+  }
 }
 
 export async function deleteVilla(id: string) {
-  await VillaService.delete(id);
-  revalidatePath("/");
-  revalidatePath("/villas");
+  try {
+    await VillaService.delete(id);
+    revalidatePath("/");
+    revalidatePath("/villas");
+    return { success: true };
+  } catch (error: unknown) {
+    return { success: false, error: getErrorMessage(error) };
+  }
 }
 
 export async function createReservation(data: ReservationInput) {
@@ -35,7 +52,7 @@ export async function createReservation(data: ReservationInput) {
     revalidatePath("/reservations");
     revalidatePath(`/villas/${data.villaId}`);
     return { success: true, data: reservation };
-  } catch (error: any) {
-    return { success: false, error: error.message };
+  } catch (error: unknown) {
+    return { success: false, error: getErrorMessage(error) };
   }
 }

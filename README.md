@@ -51,16 +51,22 @@ Validate the schema:
 bunx prisma validate
 ```
 
-Push the schema to PostgreSQL:
+Apply the committed migrations to PostgreSQL:
 
 ```bash
-bunx prisma db push
+bunx prisma migrate deploy
 ```
 
-If you want migration files instead of only pushing schema state:
+For local development, create a new migration when the schema changes:
 
 ```bash
-bunx prisma migrate dev --name init
+bunx prisma migrate dev --name your_change_name
+```
+
+If you need to reset the database in development:
+
+```bash
+bunx prisma migrate reset --force
 ```
 
 ## Run locally
