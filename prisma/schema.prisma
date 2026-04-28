@@ -1,0 +1,33 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Villa {
+  id           String        @id @default(cuid())
+  name         String
+  price        Float
+  location     String
+  capacity     Int
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  reservations Reservation[]
+}
+
+model Reservation {
+  id         String   @id @default(cuid())
+  villaId    String
+  checkIn    DateTime
+  checkOut   DateTime
+  guestName  String
+  guestEmail String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  villa      Villa    @relation(fields: [villaId], references: [id], onDelete: Cascade)
+
+  @@index([villaId])
+}
